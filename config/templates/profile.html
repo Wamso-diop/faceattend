@@ -1,0 +1,558 @@
+{% extends 'base/base.html' %}
+
+{% block content %}
+    <!-- Main content -->
+    <div class="main-content">
+        <!-- Header -->
+        <div class="main-header">
+            <div class="d-flex align-items-center">
+                <button class="btn btn-outline-secondary me-3 d-lg-none" id="mobileToggle">
+                    <i class="fas fa-bars"></i>
+                </button>
+                <button class="btn btn-outline-secondary me-3 d-none d-lg-inline-block" id="sidebarToggle">
+                    <i class="fas fa-chevron-left"></i>
+                </button>
+                
+                <div class="page-title">
+                    <h1>Mon profil</h1>
+                    <p>Gérez vos informations personnelles et vos préférences</p>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Notifications container -->
+        <div id="notification-container"></div>
+        
+        <!-- Profil utilisateur -->
+        <div class="row">
+            <div class="col-lg-4 mb-4">
+                <div class="card">
+                    <div class="card-body text-center">
+                        <div class="position-relative d-inline-block mb-3">
+                            <div class="user-avatar-lg">
+                                JD
+                            </div>
+                            <button class="btn btn-sm btn-primary position-absolute bottom-0 end-0 rounded-circle"
+                                    style="width: 36px; height: 36px;"
+                                    onclick="document.getElementById('avatarUpload').click()">
+                                <i class="fas fa-camera"></i>
+                            </button>
+                            <input type="file" id="avatarUpload" class="d-none" accept="image/*">
+                        </div>
+                        <h4 class="mb-1">Jean Dupont</h4>
+                        <p class="text-muted mb-3">
+                            <i class="fas fa-user-tag me-1"></i>Administrateur
+                        </p>
+                        <div class="d-flex justify-content-center gap-2 mb-4">
+                            <span class="badge bg-success">
+                                <i class="fas fa-circle me-1"></i>En ligne
+                            </span>
+                            <span class="badge bg-primary">
+                                <i class="fas fa-calendar-alt me-1"></i>Membre depuis: Oct 2023
+                            </span>
+                        </div>
+                        
+                        <div class="list-group list-group-flush text-start">
+                            <div class="list-group-item d-flex justify-content-between align-items-center">
+                                <span><i class="fas fa-envelope me-2 text-muted"></i>Email</span>
+                                <span class="text-end">jean.dupont@universite.fr</span>
+                            </div>
+                            <div class="list-group-item d-flex justify-content-between align-items-center">
+                                <span><i class="fas fa-phone me-2 text-muted"></i>Téléphone</span>
+                                <span class="text-end">+237 6 51 13 84 33</span>
+                            </div>
+                            <div class="list-group-item d-flex justify-content-between align-items-center">
+                                <span><i class="fas fa-map-marker-alt me-2 text-muted"></i>Localisation</span>
+                                <span class="text-end">Douala, Cameroun</span>
+                            </div>
+                            <div class="list-group-item d-flex justify-content-between align-items-center">
+                                <span><i class="fas fa-clock me-2 text-muted"></i>Dernière connexion</span>
+                                <span class="text-end">Aujourd'hui, 10:30</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Statistiques personnelles -->
+                <div class="card mt-4">
+                    <div class="card-header">
+                        <h6 class="card-title mb-0">Mon activité</h6>
+                    </div>
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between mb-3">
+                            <span>Cours créés</span>
+                            <strong>12</strong>
+                        </div>
+                        <div class="d-flex justify-content-between mb-3">
+                            <span>Sessions de présence</span>
+                            <strong>45</strong>
+                        </div>
+                        <div class="d-flex justify-content-between mb-3">
+                            <span>Étudiants enregistrés</span>
+                            <strong>245</strong>
+                        </div>
+                        <div class="d-flex justify-content-between">
+                            <span>Heures actives</span>
+                            <strong>156h</strong>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="col-lg-8">
+                <!-- Onglets du profil -->
+                <div class="card mb-4">
+                    <div class="card-body p-0">
+                        <ul class="nav nav-tabs" id="profileTabs" role="tablist">
+                            <li class="nav-item" role="presentation">
+                                <button class="nav-link active" id="info-tab" data-bs-toggle="tab" 
+                                        data-bs-target="#info" type="button" role="tab">
+                                    <i class="fas fa-user-edit me-2"></i>Informations
+                                </button>
+                            </li>
+                            <li class="nav-item" role="presentation">
+                                <button class="nav-link" id="security-tab" data-bs-toggle="tab" 
+                                        data-bs-target="#security" type="button" role="tab">
+                                    <i class="fas fa-shield-alt me-2"></i>Sécurité
+                                </button>
+                            </li>
+                            <li class="nav-item" role="presentation">
+                                <button class="nav-link" id="preferences-tab" data-bs-toggle="tab" 
+                                        data-bs-target="#preferences" type="button" role="tab">
+                                    <i class="fas fa-sliders-h me-2"></i>Préférences
+                                </button>
+                            </li>
+                            <li class="nav-item" role="presentation">
+                                <button class="nav-link" id="activity-tab" data-bs-toggle="tab" 
+                                        data-bs-target="#activity" type="button" role="tab">
+                                    <i class="fas fa-chart-line me-2"></i>Activité
+                                </button>
+                            </li>
+                        </ul>
+                        
+                        <div class="tab-content p-4" id="profileTabsContent">
+                            <!-- Onglet Informations -->
+                            <div class="tab-pane fade show active" id="info" role="tabpanel">
+                                <h5 class="mb-4">Informations personnelles</h5>
+                                <form id="profileInfoForm">
+                                    <div class="row">
+                                        <div class="col-md-6 mb-3">
+                                            <label for="profileFirstName" class="form-label">Prénom *</label>
+                                            <input type="text" class="form-control" id="profileFirstName" 
+                                                   value="Jean" required>
+                                        </div>
+                                        <div class="col-md-6 mb-3">
+                                            <label for="profileLastName" class="form-label">Nom *</label>
+                                            <input type="text" class="form-control" id="profileLastName" 
+                                                   value="Dupont" required>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="row">
+                                        <div class="col-md-6 mb-3">
+                                            <label for="profileEmail" class="form-label">Email *</label>
+                                            <input type="email" class="form-control" id="profileEmail" 
+                                                   value="jean.dupont@universite.fr" required>
+                                        </div>
+                                        <div class="col-md-6 mb-3">
+                                            <label for="profilePhone" class="form-label">Téléphone</label>
+                                            <input type="tel" class="form-control" id="profilePhone" 
+                                                   value="+33 6 12 34 56 78">
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="row">
+                                        <div class="col-md-6 mb-3">
+                                            <label for="profileDepartment" class="form-label">Département</label>
+                                            <select class="form-select" id="profileDepartment">
+                                                <option value="info" selected>Informatique</option>
+                                                <option value="math">Mathématiques</option>
+                                                <option value="physics">Physique</option>
+                                                <option value="other">Autre</option>
+                                            </select>
+                                        </div>
+                                        <div class="col-md-6 mb-3">
+                                            <label for="profileRole" class="form-label">Rôle</label>
+                                            <input type="text" class="form-control" id="profileRole" 
+                                                   value="Administrateur" readonly>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="mb-3">
+                                        <label for="profileBio" class="form-label">Biographie</label>
+                                        <textarea class="form-control" id="profileBio" rows="3" 
+                                                  placeholder="Décrivez votre parcours...">
+Administrateur du système FACEATTEND avec 5 ans d'expérience dans l'enseignement supérieur.
+Spécialiste en intelligence artificielle et systèmes de reconnaissance.
+                                        </textarea>
+                                    </div>
+                                    
+                                    <button type="submit" class="btn btn-primary">
+                                        <i class="fas fa-save me-2"></i>Enregistrer les modifications
+                                    </button>
+                                </form>
+                            </div>
+                            
+                            <!-- Onglet Sécurité -->
+                            <div class="tab-pane fade" id="security" role="tabpanel">
+                                <h5 class="mb-4">Sécurité du compte</h5>
+                                
+                                <!-- Changement de mot de passe -->
+                                <div class="card mb-4">
+                                    <div class="card-header">
+                                        <h6 class="card-title mb-0">Changer le mot de passe</h6>
+                                    </div>
+                                    <div class="card-body">
+                                        <form id="passwordChangeForm">
+                                            <div class="mb-3">
+                                                <label for="currentPassword" class="form-label">Mot de passe actuel *</label>
+                                                <input type="password" class="form-control" id="currentPassword" required>
+                                            </div>
+                                            <div class="mb-3">
+                                                <label for="newPassword" class="form-label">Nouveau mot de passe *</label>
+                                                <input type="password" class="form-control" id="newPassword" required>
+                                                <div class="form-text">
+                                                    Le mot de passe doit contenir au moins 8 caractères, 
+                                                    une majuscule, une minuscule et un chiffre.
+                                                </div>
+                                            </div>
+                                            <div class="mb-3">
+                                                <label for="confirmPassword" class="form-label">Confirmer le mot de passe *</label>
+                                                <input type="password" class="form-control" id="confirmPassword" required>
+                                            </div>
+                                            <button type="submit" class="btn btn-primary">
+                                                <i class="fas fa-key me-2"></i>Changer le mot de passe
+                                            </button>
+                                        </form>
+                                    </div>
+                                </div>
+                                
+                                <!-- Authentification à deux facteurs -->
+                                <div class="card mb-4">
+                                    <div class="card-header">
+                                        <h6 class="card-title mb-0">Authentification à deux facteurs</h6>
+                                    </div>
+                                    <div class="card-body">
+                                        <div class="d-flex justify-content-between align-items-center mb-3">
+                                            <div>
+                                                <h6 class="mb-0">2FA</h6>
+                                                <small class="text-muted">Ajoutez une couche de sécurité supplémentaire</small>
+                                            </div>
+                                            <div class="form-check form-switch">
+                                                <input class="form-check-input" type="checkbox" id="enable2FA">
+                                                <label class="form-check-label" for="enable2FA"></label>
+                                            </div>
+                                        </div>
+                                        <div id="2faSetup" class="d-none">
+                                            <hr>
+                                            <p class="mb-3">Scannez ce QR code avec votre application d'authentification :</p>
+                                            <div class="text-center mb-3">
+                                                <div class="d-inline-block p-3 bg-light rounded">
+                                                    <!-- QR Code placeholder -->
+                                                    <div style="width: 200px; height: 200px; background: #f8f9fa; 
+                                                                display: flex; align-items: center; justify-content: center;">
+                                                        <i class="fas fa-qrcode fa-3x text-muted"></i>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <p class="text-center mb-3">
+                                                <small class="text-muted">
+                                                    OU entrez ce code manuellement :<br>
+                                                    <code class="d-inline-block mt-1">JBSWY3DPEHPK3PXP</code>
+                                                </small>
+                                            </p>
+                                            <div class="mb-3">
+                                                <label for="verificationCode" class="form-label">Code de vérification</label>
+                                                <input type="text" class="form-control" id="verificationCode" 
+                                                       placeholder="Entrez le code à 6 chiffres">
+                                            </div>
+                                            <button type="button" class="btn btn-primary">
+                                                <i class="fas fa-check me-2"></i>Activer la 2FA
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <!-- Sessions actives -->
+                                <div class="card">
+                                    <div class="card-header">
+                                        <h6 class="card-title mb-0">Sessions actives</h6>
+                                    </div>
+                                    <div class="card-body">
+                                        <div class="list-group list-group-flush">
+                                            <div class="list-group-item d-flex justify-content-between align-items-center">
+                                                <div>
+                                                    <strong>Chrome sur Windows</strong>
+                                                    <div class="text-muted small">Paris, France • Actuelle</div>
+                                                </div>
+                                                <button class="btn btn-sm btn-outline-danger">
+                                                    Déconnecter
+                                                </button>
+                                            </div>
+                                            <div class="list-group-item d-flex justify-content-between align-items-center">
+                                                <div>
+                                                    <strong>Safari sur iPhone</strong>
+                                                    <div class="text-muted small">Lyon, France • Il y a 2 heures</div>
+                                                </div>
+                                                <button class="btn btn-sm btn-outline-danger">
+                                                    Déconnecter
+                                                </button>
+                                            </div>
+                                        </div>
+                                        <button class="btn btn-outline-secondary w-100 mt-3">
+                                            <i class="fas fa-sign-out-alt me-2"></i>Déconnecter tous les appareils
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- Onglet Préférences -->
+                            <div class="tab-pane fade" id="preferences" role="tabpanel">
+                                <h5 class="mb-4">Préférences utilisateur</h5>
+                                <form id="preferencesForm">
+                                    <div class="mb-4">
+                                        <h6 class="mb-3">Interface</h6>
+                                        <div class="row">
+                                            <div class="col-md-6">
+                                                <div class="mb-3">
+                                                    <label for="uiTheme" class="form-label">Thème</label>
+                                                    <select class="form-select" id="uiTheme">
+                                                        <option value="light" selected>Clair</option>
+                                                        <option value="dark">Sombre</option>
+                                                        <option value="auto">Automatique</option>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <div class="mb-3">
+                                                    <label for="uiDensity" class="form-label">Densité d'affichage</label>
+                                                    <select class="form-select" id="uiDensity">
+                                                        <option value="comfortable">Confortable</option>
+                                                        <option value="compact" selected>Compact</option>
+                                                        <option value="spacious">Spacieux</option>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="mb-4">
+                                        <h6 class="mb-3">Notifications</h6>
+                                        <div class="form-check mb-2">
+                                            <input class="form-check-input" type="checkbox" id="notifyEmailUpdates" checked>
+                                            <label class="form-check-label" for="notifyEmailUpdates">
+                                                Recevoir les mises à jour par email
+                                            </label>
+                                        </div>
+                                        <div class="form-check mb-2">
+                                            <input class="form-check-input" type="checkbox" id="notifyWeeklyReports" checked>
+                                            <label class="form-check-label" for="notifyWeeklyReports">
+                                                Rapports hebdomadaires
+                                            </label>
+                                        </div>
+                                        <div class="form-check mb-2">
+                                            <input class="form-check-input" type="checkbox" id="notifySystemAlerts">
+                                            <label class="form-check-label" for="notifySystemAlerts">
+                                                Alertes système importantes
+                                            </label>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="mb-4">
+                                        <h6 class="mb-3">Langue et région</h6>
+                                        <div class="row">
+                                            <div class="col-md-6">
+                                                <div class="mb-3">
+                                                    <label for="userLanguage" class="form-label">Langue</label>
+                                                    <select class="form-select" id="userLanguage">
+                                                        <option value="fr" selected>Français</option>
+                                                        <option value="en">Anglais</option>
+                                                        <option value="es">Espagnol</option>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <div class="mb-3">
+                                                    <label for="userTimeZone" class="form-label">Fuseau horaire</label>
+                                                    <select class="form-select" id="userTimeZone">
+                                                        <option value="Europe/Paris" selected>Europe/Paris</option>
+                                                        <option value="UTC">UTC</option>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    
+                                    <button type="submit" class="btn btn-primary">
+                                        <i class="fas fa-save me-2"></i>Enregistrer les préférences
+                                    </button>
+                                </form>
+                            </div>
+                            
+                            <!-- Onglet Activité -->
+                            <div class="tab-pane fade" id="activity" role="tabpanel">
+                                <h5 class="mb-4">Historique d'activité</h5>
+                                
+                                <!-- Graphique d'activité -->
+                                <div class="card mb-4">
+                                    <div class="card-body">
+                                        <h6 class="card-title mb-3">Activité des 30 derniers jours</h6>
+                                        <div class="chart-container" style="height: 200px;">
+                                            <!-- Graphique serait implémenté avec Chart.js -->
+                                            <div class="d-flex align-items-center justify-content-center h-100">
+                                                <div class="text-center text-muted">
+                                                    <i class="fas fa-chart-bar fa-3x mb-3"></i>
+                                                    <p>Graphique d'activité</p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <!-- Liste d'activité récente -->
+                                <div class="card">
+                                    <div class="card-header">
+                                        <h6 class="card-title mb-0">Activité récente</h6>
+                                    </div>
+                                    <div class="card-body p-0">
+                                        <div class="list-group list-group-flush">
+                                            <div class="list-group-item">
+                                                <div class="d-flex align-items-center">
+                                                    <div class="me-3">
+                                                        <div class="activity-icon bg-success">
+                                                            <i class="fas fa-user-check"></i>
+                                                        </div>
+                                                    </div>
+                                                    <div class="flex-grow-1">
+                                                        <div class="fw-bold">Session de présence terminée</div>
+                                                        <small class="text-muted">Cours d'IA • Il y a 2 heures</small>
+                                                    </div>
+                                                    <div class="text-muted">
+                                                        <small>10:30 AM</small>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="list-group-item">
+                                                <div class="d-flex align-items-center">
+                                                    <div class="me-3">
+                                                        <div class="activity-icon bg-primary">
+                                                            <i class="fas fa-user-plus"></i>
+                                                        </div>
+                                                    </div>
+                                                    <div class="flex-grow-1">
+                                                        <div class="fw-bold">Nouvel étudiant ajouté</div>
+                                                        <small class="text-muted">Marie Dubois • Il y a 4 heures</small>
+                                                    </div>
+                                                    <div class="text-muted">
+                                                        <small>8:45 AM</small>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="list-group-item">
+                                                <div class="d-flex align-items-center">
+                                                    <div class="me-3">
+                                                        <div class="activity-icon bg-warning">
+                                                            <i class="fas fa-cog"></i>
+                                                        </div>
+                                                    </div>
+                                                    <div class="flex-grow-1">
+                                                        <div class="fw-bold">Paramètres mis à jour</div>
+                                                        <small class="text-muted">Configuration système • Hier</small>
+                                                    </div>
+                                                    <div class="text-muted">
+                                                        <small>16:30</small>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="card-footer text-center">
+                                        <a href="#" class="text-decoration-none">Voir tout l'historique</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Informations du compte -->
+                <div class="card">
+                    <div class="card-header">
+                        <h5 class="card-title mb-0">Informations du compte</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <dl class="row mb-0">
+                                    <dt class="col-sm-5">ID Utilisateur</dt>
+                                    <dd class="col-sm-7">USR-00123</dd>
+                                    
+                                    <dt class="col-sm-5">Date de création</dt>
+                                    <dd class="col-sm-7">15 Octobre 2023</dd>
+                                    
+                                    <dt class="col-sm-5">Type de compte</dt>
+                                    <dd class="col-sm-7">Administrateur</dd>
+                                </dl>
+                            </div>
+                            <div class="col-md-6">
+                                <dl class="row mb-0">
+                                    <dt class="col-sm-5">Dernière mise à jour</dt>
+                                    <dd class="col-sm-7">Aujourd'hui, 10:30</dd>
+                                    
+                                    <dt class="col-sm-5">Statut du compte</dt>
+                                    <dd class="col-sm-7"><span class="badge bg-success">Actif</span></dd>
+                                    
+                                    <dt class="col-sm-5">Version</dt>
+                                    <dd class="col-sm-7">FACEATTEND v1.0.0</dd>
+                                </dl>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card-footer">
+                        <button class="btn btn-outline-danger" data-bs-toggle="modal" data-bs-target="#deleteAccountModal">
+                            <i class="fas fa-trash me-2"></i>Supprimer le compte
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal de suppression de compte -->
+    <div class="modal fade" id="deleteAccountModal" tabindex="-1" aria-labelledby="deleteAccountModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="deleteAccountModalLabel">Supprimer le compte</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="alert alert-danger">
+                        <i class="fas fa-exclamation-triangle me-2"></i>
+                        <strong>Attention !</strong> Cette action est irréversible.
+                    </div>
+                    <p>Êtes-vous sûr de vouloir supprimer votre compte ? Toutes vos données seront définitivement supprimées.</p>
+                    <div class="mb-3">
+                        <label for="confirmDelete" class="form-label">
+                            Tapez "SUPPRIMER" pour confirmer
+                        </label>
+                        <input type="text" class="form-control" id="confirmDelete" 
+                               placeholder="SUPPRIMER">
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
+                    <button type="button" class="btn btn-danger" id="confirmDeleteBtn" disabled>
+                        Supprimer définitivement
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+    <!-- Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="js/main.js"></script>
+    <script src="js/profile.js"></script>
+</body>
+</html>

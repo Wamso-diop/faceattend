@@ -1,0 +1,581 @@
+{% extends 'base/base.html' %}
+
+{% block content %}
+    <!-- Main content -->
+    <div class="main-content">
+        <!-- Header -->
+        <div class="main-header">
+            <div class="d-flex align-items-center">
+                <button class="btn btn-outline-secondary me-3 d-lg-none" id="mobileToggle">
+                    <i class="fas fa-bars"></i>
+                </button>
+                <button class="btn btn-outline-secondary me-3 d-none d-lg-inline-block" id="sidebarToggle">
+                    <i class="fas fa-chevron-left"></i>
+                </button>
+                
+                <div class="page-title">
+                    <h1>Paramètres du système</h1>
+                    <p>Configurez les préférences et les fonctionnalités</p>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Notifications container -->
+        <div id="notification-container"></div>
+        
+        <!-- Onglets de paramètres -->
+        <div class="card mb-4">
+            <div class="card-body p-0">
+                <ul class="nav nav-tabs" id="settingsTabs" role="tablist">
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link active" id="general-tab" data-bs-toggle="tab" 
+                                data-bs-target="#general" type="button" role="tab">
+                            <i class="fas fa-cog me-2"></i>Général
+                        </button>
+                    </li>
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link" id="recognition-tab" data-bs-toggle="tab" 
+                                data-bs-target="#recognition" type="button" role="tab">
+                            <i class="fas fa-robot me-2"></i>Reconnaissance
+                        </button>
+                    </li>
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link" id="notifications-tab" data-bs-toggle="tab" 
+                                data-bs-target="#notifications" type="button" role="tab">
+                            <i class="fas fa-bell me-2"></i>Notifications
+                        </button>
+                    </li>
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link" id="security-tab" data-bs-toggle="tab" 
+                                data-bs-target="#security" type="button" role="tab">
+                            <i class="fas fa-shield-alt me-2"></i>Sécurité
+                        </button>
+                    </li>
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link" id="integrations-tab" data-bs-toggle="tab" 
+                                data-bs-target="#integrations" type="button" role="tab">
+                            <i class="fas fa-plug me-2"></i>Intégrations
+                        </button>
+                    </li>
+                </ul>
+                
+                <div class="tab-content p-4" id="settingsTabsContent">
+                    <!-- Onglet Général -->
+                    <div class="tab-pane fade show active" id="general" role="tabpanel">
+                        <h5 class="mb-4">Paramètres généraux</h5>
+                        <form id="generalSettingsForm">
+                            <div class="row mb-4">
+                                <div class="col-md-6">
+                                    <div class="mb-3">
+                                        <label for="institutionName" class="form-label">Nom de l'institution</label>
+                                        <input type="text" class="form-control" id="institutionName" 
+                                               value="Université Tech Paris">
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="timezone" class="form-label">Fuseau horaire</label>
+                                        <select class="form-select" id="timezone">
+                                            <option value="Europe/Paris" selected>Europe/Paris (UTC+1)</option>
+                                            <option value="UTC">UTC</option>
+                                            <option value="America/New_York">America/New_York</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="mb-3">
+                                        <label for="dateFormat" class="form-label">Format de date</label>
+                                        <select class="form-select" id="dateFormat">
+                                            <option value="fr-FR" selected>JJ/MM/AAAA (Français)</option>
+                                            <option value="en-US">MM/DD/YYYY (Anglais)</option>
+                                            <option value="iso">YYYY-MM-DD (ISO)</option>
+                                        </select>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="language" class="form-label">Langue</label>
+                                        <select class="form-select" id="language">
+                                            <option value="fr" selected>Français</option>
+                                            <option value="en">Anglais</option>
+                                            <option value="es">Espagnol</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="mb-4">
+                                <h6 class="mb-3">Configuration des sessions</h6>
+                                <div class="row">
+                                    <div class="col-md-4">
+                                        <div class="mb-3">
+                                            <label for="sessionTimeout" class="form-label">Timeout session (minutes)</label>
+                                            <input type="number" class="form-control" id="sessionTimeout" 
+                                                   value="30" min="5" max="120">
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <div class="mb-3">
+                                            <label for="autoLogout" class="form-label">Déconnexion auto</label>
+                                            <select class="form-select" id="autoLogout">
+                                                <option value="yes" selected>Activée</option>
+                                                <option value="no">Désactivée</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <button type="submit" class="btn btn-primary">
+                                <i class="fas fa-save me-2"></i>Enregistrer les paramètres
+                            </button>
+                        </form>
+                    </div>
+                    
+                    <!-- Onglet Reconnaissance -->
+                    <div class="tab-pane fade" id="recognition" role="tabpanel">
+                        <h5 class="mb-4">Paramètres de reconnaissance faciale</h5>
+                        <form id="recognitionSettingsForm">
+                            <div class="row mb-4">
+                                <div class="col-md-6">
+                                    <div class="mb-3">
+                                        <label for="confidenceThreshold" class="form-label">
+                                            Seuil de confiance (%) 
+                                            <span class="text-muted" id="confidenceValue">75</span>
+                                        </label>
+                                        <input type="range" class="form-range" id="confidenceThreshold" 
+                                               min="50" max="99" value="75" step="1">
+                                        <div class="form-text">
+                                            Seuil minimal pour valider une reconnaissance
+                                        </div>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="captureInterval" class="form-label">Intervalle de capture (secondes)</label>
+                                        <select class="form-select" id="captureInterval">
+                                            <option value="2">2 secondes</option>
+                                            <option value="3" selected>3 secondes</option>
+                                            <option value="5">5 secondes</option>
+                                            <option value="10">10 secondes</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="mb-3">
+                                        <label for="maxFaces" class="form-label">Nombre max de visages détectés</label>
+                                        <select class="form-select" id="maxFaces">
+                                            <option value="5" selected>5 visages</option>
+                                            <option value="10">10 visages</option>
+                                            <option value="15">15 visages</option>
+                                            <option value="20">20 visages</option>
+                                        </select>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="faceModel" class="form-label">Modèle de reconnaissance</label>
+                                        <select class="form-select" id="faceModel">
+                                            <option value="hog" selected>HOG (Rapide)</option>
+                                            <option value="cnn">CNN (Précis)</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="mb-4">
+                                <h6 class="mb-3">Options avancées</h6>
+                                <div class="form-check mb-2">
+                                    <input class="form-check-input" type="checkbox" id="enableLiveDetection" checked>
+                                    <label class="form-check-label" for="enableLiveDetection">
+                                        Détection en temps réel
+                                    </label>
+                                </div>
+                                <div class="form-check mb-2">
+                                    <input class="form-check-input" type="checkbox" id="enableSoundAlert" checked>
+                                    <label class="form-check-label" for="enableSoundAlert">
+                                        Alertes sonores
+                                    </label>
+                                </div>
+                                <div class="form-check mb-2">
+                                    <input class="form-check-input" type="checkbox" id="saveCaptures">
+                                    <label class="form-check-label" for="saveCaptures">
+                                        Sauvegarder les captures
+                                    </label>
+                                </div>
+                            </div>
+                            
+                            <button type="submit" class="btn btn-primary">
+                                <i class="fas fa-save me-2"></i>Enregistrer les paramètres
+                            </button>
+                        </form>
+                    </div>
+                    
+                    <!-- Onglet Notifications -->
+                    <div class="tab-pane fade" id="notifications" role="tabpanel">
+                        <h5 class="mb-4">Paramètres de notifications</h5>
+                        <form id="notificationsSettingsForm">
+                            <div class="mb-4">
+                                <h6 class="mb-3">Types de notifications</h6>
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="form-check mb-3">
+                                            <input class="form-check-input" type="checkbox" id="notifyNewStudents" checked>
+                                            <label class="form-check-label" for="notifyNewStudents">
+                                                Nouveaux étudiants enregistrés
+                                            </label>
+                                        </div>
+                                        <div class="form-check mb-3">
+                                            <input class="form-check-input" type="checkbox" id="notifyLowConfidence" checked>
+                                            <label class="form-check-label" for="notifyLowConfidence">
+                                                Reconnaissance à faible confiance
+                                            </label>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="form-check mb-3">
+                                            <input class="form-check-input" type="checkbox" id="notifyAbsences" checked>
+                                            <label class="form-check-label" for="notifyAbsences">
+                                                Absences répétées
+                                            </label>
+                                        </div>
+                                        <div class="form-check mb-3">
+                                            <input class="form-check-input" type="checkbox" id="notifySystemUpdates">
+                                            <label class="form-check-label" for="notifySystemUpdates">
+                                                Mises à jour système
+                                            </label>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="mb-4">
+                                <h6 class="mb-3">Méthodes de notification</h6>
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="form-check mb-3">
+                                            <input class="form-check-input" type="checkbox" id="notifyInApp" checked>
+                                            <label class="form-check-label" for="notifyInApp">
+                                                Dans l'application
+                                            </label>
+                                        </div>
+                                        <div class="form-check mb-3">
+                                            <input class="form-check-input" type="checkbox" id="notifyEmail">
+                                            <label class="form-check-label" for="notifyEmail">
+                                                Email
+                                            </label>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="form-check mb-3">
+                                            <input class="form-check-input" type="checkbox" id="notifySMS">
+                                            <label class="form-check-label" for="notifySMS">
+                                                SMS
+                                            </label>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="mb-4">
+                                <h6 class="mb-3">Fréquence des rapports</h6>
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="mb-3">
+                                            <label for="dailyReport" class="form-label">Rapport quotidien</label>
+                                            <select class="form-select" id="dailyReport">
+                                                <option value="disabled">Désactivé</option>
+                                                <option value="8:00" selected>8:00</option>
+                                                <option value="9:00">9:00</option>
+                                                <option value="17:00">17:00</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="mb-3">
+                                            <label for="weeklyReport" class="form-label">Rapport hebdomadaire</label>
+                                            <select class="form-select" id="weeklyReport">
+                                                <option value="disabled" selected>Désactivé</option>
+                                                <option value="monday">Lundi matin</option>
+                                                <option value="friday">Vendredi soir</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <button type="submit" class="btn btn-primary">
+                                <i class="fas fa-save me-2"></i>Enregistrer les paramètres
+                            </button>
+                        </form>
+                    </div>
+                    
+                    <!-- Onglet Sécurité -->
+                    <div class="tab-pane fade" id="security" role="tabpanel">
+                        <h5 class="mb-4">Paramètres de sécurité</h5>
+                        <form id="securitySettingsForm">
+                            <div class="mb-4">
+                                <h6 class="mb-3">Authentification</h6>
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="mb-3">
+                                            <label for="passwordPolicy" class="form-label">Politique de mot de passe</label>
+                                            <select class="form-select" id="passwordPolicy">
+                                                <option value="basic" selected>Basique (6 caractères)</option>
+                                                <option value="medium">Moyenne (8 caractères, chiffres)</option>
+                                                <option value="strong">Forte (12 caractères, mélangés)</option>
+                                            </select>
+                                        </div>
+                                        <div class="form-check mb-3">
+                                            <input class="form-check-input" type="checkbox" id="enable2FA">
+                                            <label class="form-check-label" for="enable2FA">
+                                                Authentification à deux facteurs
+                                            </label>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="mb-3">
+                                            <label for="failedAttempts" class="form-label">
+                                                Tentatives échouées avant blocage
+                                            </label>
+                                            <select class="form-select" id="failedAttempts">
+                                                <option value="3">3 tentatives</option>
+                                                <option value="5" selected>5 tentatives</option>
+                                                <option value="10">10 tentatives</option>
+                                            </select>
+                                        </div>
+                                        <div class="mb-3">
+                                            <label for="lockoutDuration" class="form-label">
+                                                Durée de blocage (minutes)
+                                            </label>
+                                            <input type="number" class="form-control" id="lockoutDuration" 
+                                                   value="15" min="1" max="60">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="mb-4">
+                                <h6 class="mb-3">Contrôle d'accès</h6>
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="form-check mb-3">
+                                            <input class="form-check-input" type="checkbox" id="ipWhitelist" checked>
+                                            <label class="form-check-label" for="ipWhitelist">
+                                                Liste blanche IP (réseau local uniquement)
+                                            </label>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="form-check mb-3">
+                                            <input class="form-check-input" type="checkbox" id="sessionLogging" checked>
+                                            <label class="form-check-label" for="sessionLogging">
+                                                Journalisation des sessions
+                                            </label>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="mb-4">
+                                <h6 class="mb-3">Sauvegarde des données</h6>
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="mb-3">
+                                            <label for="backupFrequency" class="form-label">Fréquence de sauvegarde</label>
+                                            <select class="form-select" id="backupFrequency">
+                                                <option value="daily" selected>Quotidienne</option>
+                                                <option value="weekly">Hebdomadaire</option>
+                                                <option value="monthly">Mensuelle</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="mb-3">
+                                            <label for="retentionPeriod" class="form-label">Période de rétention</label>
+                                            <select class="form-select" id="retentionPeriod">
+                                                <option value="30">30 jours</option>
+                                                <option value="90" selected>90 jours</option>
+                                                <option value="365">1 an</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <button type="submit" class="btn btn-primary">
+                                <i class="fas fa-save me-2"></i>Enregistrer les paramètres
+                            </button>
+                        </form>
+                    </div>
+                    
+                    <!-- Onglet Intégrations -->
+                    <div class="tab-pane fade" id="integrations" role="tabpanel">
+                        <h5 class="mb-4">Intégrations externes</h5>
+                        <form id="integrationsSettingsForm">
+                            <div class="mb-4">
+                                <div class="card mb-3">
+                                    <div class="card-body">
+                                        <div class="d-flex justify-content-between align-items-center mb-3">
+                                            <div>
+                                                <h6 class="mb-0">
+                                                    <i class="fas fa-graduation-cap me-2 text-primary"></i>
+                                                    Système d'information académique
+                                                </h6>
+                                                <small class="text-muted">Synchronisation des données étudiantes</small>
+                                            </div>
+                                            <div class="form-check form-switch">
+                                                <input class="form-check-input" type="checkbox" id="sisIntegration" checked>
+                                                <label class="form-check-label" for="sisIntegration"></label>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-md-6">
+                                                <div class="mb-3">
+                                                    <label for="sisUrl" class="form-label">URL API</label>
+                                                    <input type="text" class="form-control" id="sisUrl" 
+                                                           value="https://faceattend.com/api">
+                                                </div>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <div class="mb-3">
+                                                    <label for="sisKey" class="form-label">Clé API</label>
+                                                    <input type="password" class="form-control" id="sisKey" 
+                                                           value="********">
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="mb-3">
+                                            <label for="syncFrequency" class="form-label">Fréquence de synchronisation</label>
+                                            <select class="form-select" id="syncFrequency">
+                                                <option value="hourly">Chaque heure</option>
+                                                <option value="daily" selected>Quotidienne</option>
+                                                <option value="weekly">Hebdomadaire</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <div class="card mb-3">
+                                    <div class="card-body">
+                                        <div class="d-flex justify-content-between align-items-center mb-3">
+                                            <div>
+                                                <h6 class="mb-0">
+                                                    <i class="fas fa-calendar-alt me-2 text-success"></i>
+                                                    Google Calendar
+                                                </h6>
+                                                <small class="text-muted">Synchronisation des emplois du temps</small>
+                                            </div>
+                                            <div class="form-check form-switch">
+                                                <input class="form-check-input" type="checkbox" id="calendarIntegration">
+                                                <label class="form-check-label" for="calendarIntegration"></label>
+                                            </div>
+                                        </div>
+                                        <button type="button" class="btn btn-outline-primary">
+                                            <i class="fab fa-google me-2"></i>Connecter Google Calendar
+                                        </button>
+                                    </div>
+                                </div>
+                                
+                                <div class="card">
+                                    <div class="card-body">
+                                        <div class="d-flex justify-content-between align-items-center mb-3">
+                                            <div>
+                                                <h6 class="mb-0">
+                                                    <i class="fas fa-file-export me-2 text-info"></i>
+                                                    Export automatique
+                                                </h6>
+                                                <small class="text-muted">Export vers systèmes externes</small>
+                                            </div>
+                                            <div class="form-check form-switch">
+                                                <input class="form-check-input" type="checkbox" id="autoExport">
+                                                <label class="form-check-label" for="autoExport"></label>
+                                            </div>
+                                        </div>
+                                        <div class="mb-3">
+                                            <label class="form-label">Formats d'export</label>
+                                            <div class="form-check">
+                                                <input class="form-check-input" type="checkbox" id="exportExcel" checked>
+                                                <label class="form-check-label" for="exportExcel">Excel (.xlsx)</label>
+                                            </div>
+                                            <div class="form-check">
+                                                <input class="form-check-input" type="checkbox" id="exportCSV">
+                                                <label class="form-check-label" for="exportCSV">CSV</label>
+                                            </div>
+                                            <div class="form-check">
+                                                <input class="form-check-input" type="checkbox" id="exportPDF">
+                                                <label class="form-check-label" for="exportPDF">PDF</label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <button type="submit" class="btn btn-primary">
+                                <i class="fas fa-save me-2"></i>Enregistrer les paramètres
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Section de maintenance -->
+        <div class="card">
+            <div class="card-header">
+                <h5 class="card-title mb-0">Maintenance système</h5>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="d-grid gap-2">
+                            <button class="btn btn-outline-warning" id="clearCache">
+                                <i class="fas fa-broom me-2"></i>Vider le cache
+                            </button>
+                            <button class="btn btn-outline-info" id="testSystem">
+                                <i class="fas fa-vial me-2"></i>Tester le système
+                            </button>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="d-grid gap-2">
+                            <button class="btn btn-outline-danger" id="resetSettings">
+                                <i class="fas fa-undo me-2"></i>Réinitialiser les paramètres
+                            </button>
+                            <button class="btn btn-outline-secondary" data-bs-toggle="modal" data-bs-target="#systemLogsModal">
+                                <i class="fas fa-file-alt me-2"></i>Voir les logs système
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal des logs système -->
+    <div class="modal fade" id="systemLogsModal" tabindex="-1" aria-labelledby="systemLogsModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="systemLogsModalLabel">Logs système</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="logs-container" style="max-height: 400px; overflow-y: auto;">
+                        <pre class="p-3 bg-light rounded" style="font-size: 0.85rem;">
+[2023-10-15 10:32:15] INFO: Session de reconnaissance démarrée pour le cours IA101
+[2023-10-15 10:32:18] SUCCESS: Étudiant reconnu - Marie Dubois (Confiance: 95.2%)
+[2023-10-15 10:32:21] WARNING: Reconnaissance à faible confiance - Paul Leroy (Confiance: 72.1%)
+[2023-10-15 10:32:25] SUCCESS: Présence enregistrée pour 3 étudiants
+[2023-10-15 14:02:10] INFO: Synchronisation SIS complétée - 5 étudiants mis à jour
+                        </pre>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fermer</button>
+                    <button type="button" class="btn btn-outline-primary">
+                        <i class="fas fa-download me-2"></i>Télécharger les logs
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endblock %}
+    <!-- Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="js/main.js"></script>
+    <script src="js/settings.js"></script>
+</body>
+</html>

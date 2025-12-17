@@ -1,0 +1,185 @@
+{% extends 'base/base.html' %}
+
+{% block title %}{{ title }}{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="row">
+        <div class="col-md-8 mx-auto">
+            <div class="card">
+                <div class="card-header">
+                    <h2 class="mb-0">{{ title }}</h2>
+                </div>
+                <div class="card-body">
+                    <!-- Messages Django -->
+                    {% if messages %}
+                    <div class="messages mb-3">
+                        {% for message in messages %}
+                        <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+                            {{ message }}
+                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                        </div>
+                        {% endfor %}
+                    </div>
+                    {% endif %}
+                    
+                    <form method="post" novalidate>
+                        {% csrf_token %}
+                        
+                        <!-- Affichage des erreurs non liées aux champs -->
+                        {% if form.non_field_errors %}
+                        <div class="alert alert-danger">
+                            {% for error in form.non_field_errors %}
+                            <p class="mb-0">{{ error }}</p>
+                            {% endfor %}
+                        </div>
+                        {% endif %}
+                        
+                        <div class="row">
+                            <!-- Code du cours -->
+                            <div class="col-md-6 mb-3">
+                                <label for="{{ form.course_code.id_for_label }}" class="form-label">
+                                    {{ form.course_code.label }} *
+                                </label>
+                                {{ form.course_code }}
+                                {% if form.course_code.errors %}
+                                <div class="invalid-feedback d-block">
+                                    {% for error in form.course_code.errors %}
+                                    {{ error }}
+                                    {% endfor %}
+                                </div>
+                                {% endif %}
+                            </div>
+                            
+                            <!-- Nom du cours -->
+                            <div class="col-md-6 mb-3">
+                                <label for="{{ form.course_name.id_for_label }}" class="form-label">
+                                    {{ form.course_name.label }} *
+                                </label>
+                                {{ form.course_name }}
+                                {% if form.course_name.errors %}
+                                <div class="invalid-feedback d-block">
+                                    {% for error in form.course_name.errors %}
+                                    {{ error }}
+                                    {% endfor %}
+                                </div>
+                                {% endif %}
+                            </div>
+                        </div>
+                        
+                        <div class="row">
+                            <!-- Enseignant -->
+                            <div class="col-md-6 mb-3">
+                                <label for="{{ form.teacher.id_for_label }}" class="form-label">
+                                    {{ form.teacher.label }}
+                                </label>
+                                {{ form.teacher }}
+                                {% if form.teacher.errors %}
+                                <div class="invalid-feedback d-block">
+                                    {% for error in form.teacher.errors %}
+                                    {{ error }}
+                                    {% endfor %}
+                                </div>
+                                {% endif %}
+                            </div>
+                            
+                            <!-- Salle -->
+                            <div class="col-md-6 mb-3">
+                                <label for="{{ form.room.id_for_label }}" class="form-label">
+                                    {{ form.room.label }}
+                                </label>
+                                {{ form.room }}
+                                {% if form.room.errors %}
+                                <div class="invalid-feedback d-block">
+                                    {% for error in form.room.errors %}
+                                    {{ error }}
+                                    {% endfor %}
+                                </div>
+                                {% endif %}
+                            </div>
+                        </div>
+                        
+                        <div class="row">
+                            <!-- Jour -->
+                            <div class="col-md-4 mb-3">
+                                <label for="{{ form.schedule_day.id_for_label }}" class="form-label">
+                                    {{ form.schedule_day.label }}
+                                </label>
+                                {{ form.schedule_day }}
+                                {% if form.schedule_day.errors %}
+                                <div class="invalid-feedback d-block">
+                                    {% for error in form.schedule_day.errors %}
+                                    {{ error }}
+                                    {% endfor %}
+                                </div>
+                                {% endif %}
+                            </div>
+                            
+                            <!-- Heure -->
+                            <div class="col-md-4 mb-3">
+                                <label for="{{ form.schedule_time.id_for_label }}" class="form-label">
+                                    {{ form.schedule_time.label }}
+                                </label>
+                                {{ form.schedule_time }}
+                                {% if form.schedule_time.errors %}
+                                <div class="invalid-feedback d-block">
+                                    {% for error in form.schedule_time.errors %}
+                                    {{ error }}
+                                    {% endfor %}
+                                </div>
+                                {% endif %}
+                            </div>
+                            
+                            <!-- Durée -->
+                            <div class="col-md-4 mb-3">
+                                <label for="{{ form.duration.id_for_label }}" class="form-label">
+                                    {{ form.duration.label }}
+                                </label>
+                                <div class="input-group">
+                                    {{ form.duration }}
+                                    <span class="input-group-text">minutes</span>
+                                </div>
+                                {% if form.duration.errors %}
+                                <div class="invalid-feedback d-block">
+                                    {% for error in form.duration.errors %}
+                                    {{ error }}
+                                    {% endfor %}
+                                </div>
+                                {% endif %}
+                                <small class="form-text text-muted">{{ form.duration.help_text }}</small>
+                            </div>
+                        </div>
+                        
+                        <div class="d-flex justify-content-between mt-4">
+                            <a href="{% url 'courses:course_list' %}" class="btn btn-secondary">
+                                <i class="bi bi-arrow-left"></i> Retour à la liste
+                            </a>
+                            <button type="submit" class="btn btn-primary">
+                                <i class="bi bi-check-circle"></i> {{ submit_text }}
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+// Script pour ajouter la classe 'is-invalid' aux champs avec erreurs
+document.addEventListener('DOMContentLoaded', function() {
+    const form = document.querySelector('form');
+    const inputs = form.querySelectorAll('input, select, textarea');
+    
+    inputs.forEach(input => {
+        if (input.classList.contains('is-invalid')) {
+            // La classe est déjà ajoutée par Django
+        } else if (input.nextElementSibling && input.nextElementSibling.classList.contains('invalid-feedback')) {
+            input.classList.add('is-invalid');
+        }
+    });
+});
+</script>
+{% endblock %}

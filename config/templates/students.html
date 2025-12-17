@@ -1,0 +1,320 @@
+{% extends 'base/base.html' %}
+
+{% block content %}
+    <div class="main-content">
+        <!-- Header -->
+        <div class="main-header">
+            <div class="d-flex align-items-center">
+                <button class="btn btn-outline-secondary me-3 d-lg-none" id="mobileToggle">
+                    <i class="fas fa-bars"></i>
+                </button>
+                <button class="btn btn-outline-secondary me-3 d-none d-lg-inline-block" id="sidebarToggle">
+                    <i class="fas fa-chevron-left"></i>
+                </button>
+                
+                <div class="page-title">
+                    <h1>Gestion des étudiants</h1>
+                    <p>Enregistrez et gérez les étudiants du système</p>
+                </div>
+            </div>
+            
+            <div class="header-actions">
+                <a href="#" class="btn btn-secondary me-2">
+                    <i class="fas fa-file-export me-2"></i>Exporter
+                </a>
+                <a class="btn btn-primary" href="{% url 'students:add-student' %}">
+                    <i class="fas fa-user-plus me-2"></i>Ajouter un étudiant
+                </a>
+            </div>
+        </div>
+        
+        <!-- Filtres et recherche -->
+        <div class="card mb-4">
+            <div class="card-body">
+                <div class="row g-3">
+                    <div class="col-md-4">
+                        <input type="text" class="form-control" id="searchStudents" placeholder="Rechercher un étudiant...">
+                    </div>
+                    <div class="col-md-3">
+                        <select class="form-select" id="filterProgram">
+                            <option value="">Tous les programmes</option>
+                            <option value="informatique">Informatique</option>
+                            <option value="genie_logiciel">Génie Logiciel</option>
+                            <option value="reseau">Réseaux</option>
+                        </select>
+                    </div>
+                    <div class="col-md-3">
+                        <select class="form-select" id="filterYear">
+                            <option value="">Tous les niveaux</option>
+                            <option value="1">1ère année</option>
+                            <option value="2">2ème année</option>
+                            <option value="3">3ème année</option>
+                        </select>
+                    </div>
+                    <div class="col-md-2">
+                        <button class="btn btn-outline-secondary w-100" id="resetFilters">
+                            <i class="fas fa-redo"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Tableau des étudiants -->
+
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-header">
+                        <h5 class="card-title mb-0" style="float:left">Liste des étudiants</h5>
+                    <div class="d-flex align-items-center" style="float:right">
+                        <div class="me-3">
+                            <span class="text-muted">{{ students.count }} étudiants</span>
+                        </div>
+                        <div class="btn-group" role="group">
+                            <button type="button" class="btn btn-outline-secondary active" data-view="table">
+                                <i class="fas fa-list"></i>
+                            </button>
+                            <button type="button" class="btn btn-outline-secondary" data-view="grid">
+                                <i class="fas fa-th-large"></i>
+                            </button>
+                        </div>
+                    </div>
+                    </div>
+                    
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <table class="table table-hover" id="studentsTable">
+                                <thead>
+                                    <tr>
+                                        <th>#</th>
+                                        <th>Nom</th>
+                                        <th>Matricule</th>
+                                        <th>Programme</th>
+                                        <th>Année</th>
+                                        <th>Date d'inscription</th>
+                                        <th>Statut</th>
+                                        <th>Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for student in students %}
+                                    <tr>
+                                        <td>{{ forloop.counter }}</td>
+                                        <td>
+                                            <div class="d-flex align-items-center">
+                                                {% with initials=student.first_name|first|add:student.last_name|first avatar_color=student.id|stringformat:"s"|slice:":6" %}
+                                                <div class="student-avatar me-2" style="background-color: #{{ avatar_color }}99">
+                                                    {{ initials|upper }}
+                                                </div>
+                                                {% endwith %}
+                                                <div>
+                                                    <div class="fw-bold">{{ student.first_name }} {{ student.last_name }}</div>
+                                                    <div class="text-muted small">{{ student.email }}</div>
+                                                </div>
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <span class="badge bg-light text-dark">{{ student.student_number }}</span>
+                                        </td>
+                                        <td>{{ student.program }}</td>
+                                        <td>
+                                            <span class="badge bg-info">{{ student.year_level }}ère année</span>
+                                        </td>
+                                        <td>{{ student.created_at|date:"d/m/Y" }}</td>
+                                        <td>
+                                            {% if student.is_active %}
+                                            <span class="status-badge status-present">Actif</span>
+                                            {% else %}
+                                            <span class="status-badge status-absent">Inactif</span>
+                                            {% endif %}
+                                        </td>
+                                        <td>
+                                            <div class="btn-group btn-group-sm" role="group">
+                                                <a href="#" 
+                                                class="btn btn-outline-primary" 
+                                                data-bs-toggle="tooltip" 
+                                                title="Voir le profil">
+                                                    <i class="fas fa-eye"></i>
+                                                </a>
+                                                <a href="#" 
+                                                class="btn btn-outline-secondary"
+                                                data-bs-toggle="tooltip" 
+                                                title="Modifier">
+                                                    <i class="fas fa-edit"></i>
+                                                </a>
+                                                <a href="#" 
+                                                class="btn btn-outline-danger"
+                                                data-bs-toggle="tooltip" 
+                                                title="Supprimer">
+                                                    <i class="fas fa-trash"></i>
+                                                </a>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    {% empty %}
+                                    <tr>
+                                        <td colspan="8" class="text-center text-muted py-4">
+                                            Aucun étudiant trouvé.
+                                        </td>
+                                    </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+</div>
+    </div>
+
+    <!-- Modal d'ajout d'étudiant -->
+    <div class="modal fade" id="addStudentModal" tabindex="-1" aria-labelledby="addStudentModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="addStudentModalLabel">Ajouter un nouvel étudiant</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="studentForm">
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label for="firstName" class="form-label">Prénom *</label>
+                                <input type="text" class="form-control" id="firstName" required>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label for="lastName" class="form-label">Nom *</label>
+                                <input type="text" class="form-control" id="lastName" required>
+                            </div>
+                        </div>
+                        
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label for="studentNumber" class="form-label">Numéro étudiant *</label>
+                                <input type="text" class="form-control" id="studentNumber" required>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label for="email" class="form-label">Email</label>
+                                <input type="email" class="form-control" id="email">
+                            </div>
+                        </div>
+                        
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label for="program" class="form-label">Programme</label>
+                                <select class="form-select" id="program">
+                                    <option value="">Sélectionner un programme</option>
+                                    <option value="informatique">Informatique</option>
+                                    <option value="genie_logiciel">Génie Logiciel</option>
+                                    <option value="reseau">Réseaux</option>
+                                </select>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label for="yearLevel" class="form-label">Niveau</label>
+                                <select class="form-select" id="yearLevel">
+                                    <option value="">Sélectionner un niveau</option>
+                                    <option value="1">1ère année</option>
+                                    <option value="2">2ème année</option>
+                                    <option value="3">3ème année</option>
+                                </select>
+                            </div>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label class="form-label">Capture de la photo</label>
+                            <div class="card">
+                                <div class="card-body text-center">
+                                    <div class="camera-container mb-3" style="max-width: 400px; margin: 0 auto;">
+                                        <video id="studentCamera" class="camera-view" autoplay playsinline></video>
+                                        <canvas id="studentCanvas" class="d-none"></canvas>
+                                    </div>
+                                    <div class="d-flex justify-content-center gap-2">
+                                        <button type="button" class="btn btn-primary" id="startCamera">
+                                            <i class="fas fa-camera me-2"></i>Démarrer la caméra
+                                        </button>
+                                        <button type="button" class="btn btn-success" id="capturePhoto">
+                                            <i class="fas fa-camera me-2"></i>Prendre une photo
+                                        </button>
+                                    </div>
+                                    <div class="mt-3" id="photoPreview"></div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="alert alert-info">
+                            <i class="fas fa-info-circle me-2"></i>
+                            Assurez-vous que le visage est bien éclairé et visible. La photo sera utilisée pour la reconnaissance faciale.
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
+                    <button type="submit" form="studentForm" class="btn btn-primary">Enregistrer l'étudiant</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+<style>
+.student-avatar {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-weight: bold;
+    font-size: 14px;
+}
+
+.status-badge {
+    padding: 4px 12px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 500;
+}
+
+.status-present {
+    background-color: #d4edda;
+    color: #155724;
+}
+
+.status-absent {
+    background-color: #f8d7da;
+    color: #721c24;
+}
+</style>
+
+<script>
+// Initialiser les tooltips Bootstrap
+document.addEventListener('DOMContentLoaded', function() {
+    var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
+    var tooltipList = tooltipTriggerList.map(function(tooltipTriggerEl) {
+        return new bootstrap.Tooltip(tooltipTriggerEl);
+    });
+});
+</script>
+
+
+
+
+
+
+
+
+
+
+
+    {% endblock %}
+    <!-- Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="js/main.js"></script>
+    <script src="js/students.js"></script>
+</body>
+</html>

@@ -1,0 +1,304 @@
+{% extends 'base/base.html' %}
+
+{% block content %}
+    <div class="main-content">
+        <!-- Header -->
+        <div class="main-header">
+            <div class="d-flex align-items-center">
+                <button class="btn btn-outline-secondary me-3 d-lg-none" id="mobileToggle">
+                    <i class="fas fa-bars"></i>
+                </button>
+                <button class="btn btn-outline-secondary me-3 d-none d-lg-inline-block" id="sidebarToggle">
+                    <i class="fas fa-chevron-left"></i>
+                </button>
+                
+                <div class="page-title">
+                    <h1>Tableau de bord</h1>
+                    <p>Bienvenue dans le système de présence intelligente</p>
+                </div>
+            </div>
+            
+            <div class="header-actions">
+                <div class="dropdown">
+                    <button class="btn btn-outline-secondary position-relative" type="button" data-bs-toggle="dropdown">
+                        <i class="fas fa-bell"></i>
+                        <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
+                            3
+                        </span>
+                    </button>
+                    <div class="dropdown-menu dropdown-menu-end p-0" style="min-width: 300px;">
+                        <div class="dropdown-header">
+                            <h6 class="mb-0">Notifications</h6>
+                        </div>
+                        <div class="list-group list-group-flush">
+                            <a href="#" class="list-group-item list-group-item-action">
+                                <div class="d-flex align-items-center">
+                                    <div class="me-3">
+                                        <i class="fas fa-user-check text-success"></i>
+                                    </div>
+                                    <div class="flex-grow-1">
+                                        <p class="mb-0 fw-bold">Prise de présence terminée</p>
+                                        <small class="text-muted">Cours d'IA - 10:30 AM</small>
+                                    </div>
+                                </div>
+                            </a>
+                            <a href="#" class="list-group-item list-group-item-action">
+                                <div class="d-flex align-items-center">
+                                    <div class="me-3">
+                                        <i class="fas fa-exclamation-triangle text-warning"></i>
+                                    </div>
+                                    <div class="flex-grow-1">
+                                        <p class="mb-0 fw-bold">Absence répétée détectée</p>
+                                        <small class="text-muted">Étudiant: Jean Dupont</small>
+                                    </div>
+                                </div>
+                            </a>
+                        </div>
+                        <div class="dropdown-footer text-center p-2">
+                            <a href="#" class="text-decoration-none">Voir toutes les notifications</a>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="user-profile dropdown">
+                    <div class="user-avatar" data-bs-toggle="dropdown">
+                    {% if user.first_name %}
+                        {{ user.first_name|slice:":2"|upper }}
+                    {% else %}
+                        {{ user.username|slice:":2"|upper }}
+                    {% endif %}
+                    </div>
+                    <div class="user-info d-none d-md-block">
+                        <div class="user-name">{% if user.first_name %}{{ user.first_name }}{% else %}{{ user.username }}{% endif %}</div>
+                        <div class="user-role">Administrateur</div>
+                    </div>
+                    <div class="dropdown-menu dropdown-menu-end">
+                        <a class="dropdown-item" href="profile.html">
+                            <i class="fas fa-user me-2"></i>Mon profil
+                        </a>
+                        <a class="dropdown-item" href="#">
+                            <i class="fas fa-cog me-2"></i>Paramètres
+                        </a>
+                        <div class="dropdown-divider"></div>
+                        <a class="dropdown-item text-danger" href="#" id="logoutBtn">
+                            <i class="fas fa-sign-out-alt me-2"></i>Déconnexion
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Notifications container -->
+        <div id="notification-container"></div>
+        
+        <!-- Statistiques -->
+        <div class="row">
+            <div class="col-xl-3 col-md-6 mb-4">
+                <div class="card stat-card">
+                    <div class="stat-icon primary">
+                        <i class="fas fa-users"></i>
+                    </div>
+                    <div class="stat-number">245</div>
+                    <div class="stat-label">Étudiants inscrits</div>
+                </div>
+            </div>
+            
+            <div class="col-xl-3 col-md-6 mb-4">
+                <div class="card stat-card">
+                    <div class="stat-icon success">
+                        <i class="fas fa-user-check"></i>
+                    </div>
+                    <div class="stat-number">189</div>
+                    <div class="stat-label">Présents aujourd'hui</div>
+                </div>
+            </div>
+            
+            <div class="col-xl-3 col-md-6 mb-4">
+                <div class="card stat-card">
+                    <div class="stat-icon warning">
+                        <i class="fas fa-chart-line"></i>
+                    </div>
+                    <div class="stat-number">94.2%</div>
+                    <div class="stat-label">Taux de présence</div>
+                </div>
+            </div>
+            
+            <div class="col-xl-3 col-md-6 mb-4">
+                <div class="card stat-card">
+                    <div class="stat-icon danger">
+                        <i class="fas fa-exclamation-circle"></i>
+                    </div>
+                    <div class="stat-number">12</div>
+                    <div class="stat-label">Absences répétées</div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Graphiques et contenu principal -->
+        <div class="row">
+            <div class="col-lg-8 mb-4">
+                <div class="card">
+                    <div class="card-header">
+                        <h5 class="card-title mb-0">Présence cette semaine</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="chart-container">
+                            <canvas id="attendanceChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="col-lg-4 mb-4">
+                <div class="card">
+                    <div class="card-header">
+                        <h5 class="card-title mb-0">Cours aujourd'hui</h5>
+                    </div>
+                    <div class="card-body p-0">
+                        <div class="list-group list-group-flush">
+                            <div class="list-group-item d-flex justify-content-between align-items-center">
+                                <div>
+                                    <h6 class="mb-1">Intelligence Artificielle</h6>
+                                    <small class="text-muted">10:30 - 12:30 | Salle A12</small>
+                                </div>
+                                <span class="badge bg-success">En cours</span>
+                            </div>
+                            <div class="list-group-item d-flex justify-content-between align-items-center">
+                                <div>
+                                    <h6 class="mb-1">Base de données</h6>
+                                    <small class="text-muted">14:00 - 16:00 | Salle B07</small>
+                                </div>
+                                <span class="badge bg-light text-dark">À venir</span>
+                            </div>
+                            <div class="list-group-item d-flex justify-content-between align-items-center">
+                                <div>
+                                    <h6 class="mb-1">Réseaux informatiques</h6>
+                                    <small class="text-muted">16:30 - 18:30 | Salle C03</small>
+                                </div>
+                                <span class="badge bg-light text-dark">À venir</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="card mt-4">
+                    <div class="card-header">
+                        <h5 class="card-title mb-0">Dernières présences</h5>
+                    </div>
+                    <div class="card-body p-0">
+                        <div class="list-group list-group-flush">
+                            <div class="list-group-item">
+                                <div class="d-flex align-items-center">
+                                    <div class="me-3">
+                                        <div class="student-avatar">MD</div>
+                                    </div>
+                                    <div class="flex-grow-1">
+                                        <h6 class="mb-0">Marie Dubois</h6>
+                                        <small class="text-muted">IA - 10:32 AM</small>
+                                    </div>
+                                    <span class="badge bg-success">Présent</span>
+                                </div>
+                            </div>
+                            <div class="list-group-item">
+                                <div class="d-flex align-items-center">
+                                    <div class="me-3">
+                                        <div class="student-avatar">PL</div>
+                                    </div>
+                                    <div class="flex-grow-1">
+                                        <h6 class="mb-0">Paul Leroy</h6>
+                                        <small class="text-muted">IA - 10:35 AM</small>
+                                    </div>
+                                    <span class="badge bg-warning">En retard</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Autres sections -->
+        <div class="row">
+            <div class="col-lg-6 mb-4">
+                <div class="card">
+                    <div class="card-header">
+                        <h5 class="card-title mb-0">Top étudiants (présence)</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="table-container">
+                            <table class="table table-hover">
+                                <thead>
+                                    <tr>
+                                        <th>Étudiant</th>
+                                        <th>Cours</th>
+                                        <th>Taux</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>
+                                            <div class="d-flex align-items-center">
+                                                <div class="student-avatar me-2">AD</div>
+                                                <div>Anne Dupuis</div>
+                                            </div>
+                                        </td>
+                                        <td>IA</td>
+                                        <td>
+                                            <div class="d-flex align-items-center">
+                                                <div class="progress flex-grow-1 me-2" style="height: 6px;">
+                                                    <div class="progress-bar bg-success" style="width: 100%"></div>
+                                                </div>
+                                                <span>100%</span>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <div class="d-flex align-items-center">
+                                                <div class="student-avatar me-2">TM</div>
+                                                <div>Thomas Martin</div>
+                                            </div>
+                                        </td>
+                                        <td>BDD</td>
+                                        <td>
+                                            <div class="d-flex align-items-center">
+                                                <div class="progress flex-grow-1 me-2" style="height: 6px;">
+                                                    <div class="progress-bar bg-success" style="width: 98%"></div>
+                                                </div>
+                                                <span>98%</span>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="col-lg-6 mb-4">
+                <div class="card">
+                    <div class="card-header">
+                        <h5 class="card-title mb-0">Alertes et notifications</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="alert alert-warning d-flex align-items-center">
+                            <i class="fas fa-exclamation-triangle me-3 fs-4"></i>
+                            <div>
+                                <strong>Absence répétée détectée</strong>
+                                <p class="mb-0">Jean Dupont a manqué 3 cours consécutifs</p>
+                            </div>
+                        </div>
+                        <div class="alert alert-info d-flex align-items-center">
+                            <i class="fas fa-info-circle me-3 fs-4"></i>
+                            <div>
+                                <strong>Mise à jour système</strong>
+                                <p class="mb-0">Nouvelle version disponible (v1.2.0)</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
